@@ -2,28 +2,14 @@ import random
 import threading
 import queue
 import time
-
 import cv2
 import numpy as np
 from concurrent import futures
 import grpc
-import psutil
-import torch
-
-import service
 from proto import video_pb2, video_pb2_grpc
-
-# 根据CPU核心数动态调整
 import os
-
 from service.detect import detect_face, detect_pose
-from ultralytics import YOLO
-from util.util import put_points, normalized_to_pixels, pixels_to_normalized
 
-def get_cpu_usage(interval=1):
-    cpu_usage = psutil.cpu_percent(interval=interval)
-    print(f"当前CPU占用率：{cpu_usage}%")
-    return cpu_usage
 class AsyncVideoProcessor(video_pb2_grpc.VideoProcessorServicer):
     def __init__(self):
         # 初始化线程安全的队列
@@ -93,11 +79,11 @@ class AsyncVideoProcessor(video_pb2_grpc.VideoProcessorServicer):
             person_boxes = detect_pose(img)
             end_time = time.time()
 
-            img = cv2.imencode('.jpg', img)[1].tobytes()
+            # img = cv2.imencode('.jpg', img)[1].tobytes()
             print(f"算法耗时: {end_time - start_time}")
             return video_pb2.AnalysisResult(
                 timestamp=frame.timestamp,
-                image_data=img,
+                image_data=frame.image_data,
                 face_boxes=face_boxes,
                 person_boxes=person_boxes,
             )

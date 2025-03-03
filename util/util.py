@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import psutil
 
 
 def pixels_to_normalized(boxes, shape, mode="xyxy"):
@@ -91,6 +92,10 @@ def line(pre_idx, idx, points, frame, x=0):
                     line(idx, idxs[idxs.index(_id) + 1], points, frame, x)
 
 
+def get_cpu_usage(interval=1):
+    cpu_usage = psutil.cpu_percent(interval=interval)
+    print(f"当前CPU占用率：{cpu_usage}%")
+    return cpu_usage
 def put_points(pose_results, frame):
     keypoints = np.array(pose_results[0].keypoints.xy.int().tolist())
     point_color = (225, 249, 154)  # BGR
