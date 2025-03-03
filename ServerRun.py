@@ -78,7 +78,6 @@ class AsyncVideoProcessor(video_pb2_grpc.VideoProcessorServicer):
             face_boxes = detect_face(img)
             person_boxes = detect_pose(img)
             end_time = time.time()
-
             # img = cv2.imencode('.jpg', img)[1].tobytes()
             print(f"算法耗时: {end_time - start_time}")
             return video_pb2.AnalysisResult(

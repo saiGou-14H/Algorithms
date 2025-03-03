@@ -8,7 +8,7 @@ from util.util import normalized_to_pixels, put_points
 
 
 def detect_expression(imGray):
-    result = expression.predict(source=imGray, device=device,verbose=False)
+    result = expression.predict(source=imGray,device=device,verbose=False)
     names_dict = result[0].names
     expression_id = result[0].probs.top1
     expression_feature = names_dict[expression_id]
@@ -16,7 +16,7 @@ def detect_expression(imGray):
 
 def detect_face(img):
     face_boxes = []
-    results = face.predict(img, device=device, conf=0.4, verbose=False)
+    results = face.predict(img, device=device, imgsz = 1984,conf=0.4, verbose=False)
     for box in results[0].boxes:
         x1, y1, x2, y2 = box.xyxyn.tolist()[0]
         minPoint = video_pb2.Point(x=x1, y=y1)
@@ -42,7 +42,7 @@ def detect_face(img):
 
 def detect_pose(img):
     person_boxes = []
-    pose_results = pose.predict(img, device=device, conf=0.4, verbose=False)
+    pose_results = pose.predict(img, device=device, imgsz = 1984,conf=0.4, verbose=False)
     if pose_results[0].keypoints.conf != None:
         keypoints = pose_results[0].keypoints.xyn.tolist()
         boxes = pose_results[0].boxes.xyxyn.tolist()
